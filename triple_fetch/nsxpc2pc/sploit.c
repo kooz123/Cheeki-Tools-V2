@@ -975,6 +975,6 @@ int do_exploit() {
   //logMsg("press ps for process listing");
   
 #endif
-  do_post_exploit(mach_task_self()); //If we are already exploited we want ofcourse to gain our task back at next run
+  //do_post_exploit(mach_task_self()); //If we are already exploited we want ofcourse to gain our task back at next run
   return 0;
 }
