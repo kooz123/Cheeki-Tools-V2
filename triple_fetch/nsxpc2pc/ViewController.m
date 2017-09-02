@@ -81,30 +81,17 @@ AVAudioPlayer *pumpaMusika; //Music player
 }
 
 //Code for getting a random song
-long random_at_most(long max) {
-    unsigned long
-    // max <= RAND_MAX < ULONG_MAX, so this is okay.
-    num_bins = (unsigned long) max + 1,
-    num_rand = (unsigned long) RAND_MAX + 1,
-    bin_size = num_rand / num_bins,
-    defect   = num_rand % num_bins;
-
-    long x;
-    do {
-        x = random();
-    }
-    // This is carefully written not to overflow
-    while (num_rand - defect <= (unsigned long)x);
-
-    // Truncated division is intentional
-    return x/bin_size;
+int random_number_between(int min, int max) {
+    if(min < 0) {min = 0;}
+    if(max < 0) { max = 0;}
+    return (int)rand()%(max-min) + min;
 }
 
 - (void) musikPlayer {
     NSError *e;
     NSArray *songs = [[NSArray alloc] initWithObjects:@"songs/anthem.mp3", @"songs/cheekibreeki.mp3", @"songs/farewellslavianka.mp3", @"songs/hostwessel.mp3", @"songs/katyusha.mp3", @"songs/korobeiniki.mp3", @"songs/moskau.mp3", @"songs/polyushkopolye.mp3", @"songs/redarmy.mp3", @"songs/running.mp3", nil];
     int songssize = (int)[songs count];
-    int selectSong = (int)random_at_most(songssize);
+    NSInteger selectSong = random_number_between(0, songssize);
     NSString *selectedSong = [songs objectAtIndex:selectSong];
     NSString *songpath = [NSString stringWithFormat:@"%s/%@", bundle_path(), selectedSong];
     pumpaMusika = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:songpath] error:&e];
