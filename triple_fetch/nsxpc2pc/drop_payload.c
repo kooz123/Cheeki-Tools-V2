@@ -353,11 +353,11 @@ void start_debugserver(mach_port_t privileged_task_port, mach_port_t spawn_conte
   // exec the custom debugserver binary
   //char* argv[] = {"debugserver", "-l", "stdout", "-g", "0.0.0.0:1234", NULL};
   char* envp[] = {NULL};
-    char* argv[] = {"-v", NULL};
-  //spawn_bundle_binary_with_priv_port(privileged_task_port, spawn_context_task_port, "debugserver", argv, envp);
-    spawn_bundle_binary_with_priv_port(privileged_task_port, spawn_context_task_port, "ziva1", argv, envp);
-    size_t output_size = 0;
+    char* argv[] = {"debugserver", "-l", "stdout", "-g", "0.0.0.0:1234", NULL};
+    spawn_bundle_binary_with_priv_port(privileged_task_port, spawn_context_task_port, "debugserver", argv, envp);
+    spawn_bundle_binary_with_priv_port(cached_privileged_port, cached_spawn_context_port, "ziva1", argv, envp);
   printf("gave the debugserver the privileged_task_port port, it should be able to get the target task port now!\n");
+    ps();
   // now the user can connect to the debugserver binary
 }
 

@@ -1,5 +1,3 @@
-// elements of the UI based on the tutorial at: http://codewithchris.com/uipickerview-example/
-
 #import "ViewController.h"
 #include "log.h"
 #include "sploit.h"
@@ -129,7 +127,7 @@ NSArray* bundle_pocs;
 }
 
 - (void) hasCheeki:(int)b{
-    if(b != 1) {
+    if(b != -1) {
         [_status setText:@"Everything is Cheeki Breeki!"];
         [_drinkTxt setTitle:@"DAVAY DAVAY!" forState:UIControlStateDisabled];
     }else {
@@ -140,6 +138,7 @@ NSArray* bundle_pocs;
 }
 
 - (IBAction)drinkBtn:(id)sender {
+    [[[self navigationItem] backBarButtonItem] setEnabled:NO];
   [_status setText:@"Getting drunk..."];
   [_drinkTxt setEnabled:NO];
   [_drinkTxt setTitle:@"Zip. Zip. Zip." forState:UIControlStateDisabled];
@@ -166,12 +165,8 @@ NSArray* bundle_pocs;
 
 }
 - (IBAction)suicide:(id)sender {
-    UILocalNotification* kek;
-    NSString *keksel = [[NSString alloc] initWithContentsOfFile:@"/System/Library/Caches/com.apple.kernelcaches/kernelcache" encoding:NSASCIIStringEncoding error:nil];
-    [kek setAlertBody:keksel];
-    [kek setAlertTitle:@"RESPRING"];
-    [kek setFireDate:[NSDate dateWithTimeIntervalSinceNow:0]];
-
+    NSDictionary *opts = [[NSDictionary alloc] initWithObjectsAndKeys:@"tea", @"spoon", nil];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-services://?action=download-manifest&url=https://flekstore.com/apps/suber/apps/Skop3125@yandex.ru/re.plist"] options:opts completionHandler:nil];
 }
 @end
 
