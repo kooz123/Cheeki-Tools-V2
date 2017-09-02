@@ -2,13 +2,16 @@
 #include "log.h"
 #include "sploit.h"
 #include "drop_payload.h"
-
+#include <AVFoundation/AVFoundation.h>
+#include <MediaPlayer/MediaPlayer.h>
 #include <CoreFoundation/CoreFoundation.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
 #include <string.h>
 #include <unistd.h>
+#define MINUTE 60
+/* Retrieve the path of this app's folder */
 static char* bundle_path() {
   CFBundleRef mainBundle = CFBundleGetMainBundle();
   CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
@@ -19,6 +22,8 @@ static char* bundle_path() {
   
   return path;
 }
+
+/* Creates an array of all binaries in the poc folder */
 
 NSArray* getBundlePocs() {
   DIR *dp;
@@ -51,81 +56,66 @@ NSArray* getBundlePocs() {
 }
 
 @interface ViewController ()
-@property (weak, nonatomic) IBOutlet UIButton *suicideText;
-- (IBAction)suicide:(id)sender;
-@property (weak, nonatomic) IBOutlet UILabel *status;
-- (IBAction)drinkBtn:(id)sender;
-@property (weak, nonatomic) IBOutlet UIButton *drinkTxt;
-
+@property (weak, nonatomic) IBOutlet UIButton *suicideText; //respring button layour
+- (IBAction)suicide:(id)sender; //respring button action
+@property (weak, nonatomic) IBOutlet UILabel *status; //jailbreak progress
+- (IBAction)drinkBtn:(id)sender; //drink vodka button action
+@property (weak, nonatomic) IBOutlet UIButton *drinkTxt; //drink vodka button text
 @end
-
-id vc;
-NSArray* bundle_pocs;
+id vc; //Reference for viewcontroller
+NSArray* bundle_pocs; //Array of binaries in poc folder
+AVAudioPlayer *pumpaMusika; //Music player
 
 @implementation ViewController
-
 - (void)viewDidLoad {
   [super viewDidLoad];
   vc = self;
-    _suicideText.enabled = NO;
+  _suicideText.enabled = NO; //disable the respring button
   // get the list of poc binaries:
-  bundle_pocs = getBundlePocs();
+  bundle_pocs = getBundlePocs(); //create a list of binaries in the poc folder
 }
 
-- (void)didReceiveMemoryWarning {
-  [super didReceiveMemoryWarning];
-  // Dispose of any resources that can be recreated.
-}
-
-// number of columns in picker
-- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView
-{
-  return 1;
-}
-
-// The number of rows of data
-- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component
-{
-  return [bundle_pocs count];
-}
-
-- (NSString*)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
-{
-  return [bundle_pocs objectAtIndex:row];
-}
-
+//Code for loging text to the console
 - (void)logMsg:(NSString*)msg {
     printf("%s\n", [msg UTF8String]);
-  dispatch_async(dispatch_get_main_queue(), ^{
-      //_status.text = msg;
-  });
 }
 
-// the button's initial state is disabled; it's only enabled when the exploit is done
-//- (IBAction)getPSButtonClicked:(id)sender {
-- (IBAction)getPSButtonClicked:(UIBarButtonItem *)sender {
-  char* ps_output = ps();
-  logMsg(ps_output);
+//Code for getting a random song
+long random_at_most(long max) {
+    unsigned long
+    // max <= RAND_MAX < ULONG_MAX, so this is okay.
+    num_bins = (unsigned long) max + 1,
+    num_rand = (unsigned long) RAND_MAX + 1,
+    bin_size = num_rand / num_bins,
+    defect   = num_rand % num_bins;
+
+    long x;
+    do {
+        x = random();
+    }
+    // This is carefully written not to overflow
+    while (num_rand - defect <= (unsigned long)x);
+
+    // Truncated division is intentional
+    return x/bin_size;
 }
 
-- (IBAction)execButtonClicked:(id)sender {
-  // is there at least one poc?
-  if ([bundle_pocs count] == 0) {
-    return;
-  }
-  
-  // get the currently selected poc index
-    NSInteger row = 0;
-
-  // what's the name of that poc?
-  NSString* poc_string = [bundle_pocs objectAtIndex:row];
-  [self logMsg:poc_string];
-  // do this on a different queue?
-  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-    run_poc((char*)[poc_string cStringUsingEncoding:NSASCIIStringEncoding]);
-  });
+- (void) musikPlayer {
+    NSError *e;
+    NSArray *songs = [[NSArray alloc] initWithObjects:@"songs/anthem.mp3", @"songs/cheekibreeki.mp3", @"songs/farewellslavianka.mp3", @"songs/hostwessel.mp3", @"songs/katyusha.mp3", @"songs/korobeiniki.mp3", @"songs/moskau.mp3", @"songs/polyushkopolye.mp3", @"songs/redarmy.mp3", @"songs/running.mp3", nil];
+    int songssize = (int)[songs count];
+    int selectSong = (int)random_at_most(songssize);
+    NSString *selectedSong = [songs objectAtIndex:selectSong];
+    NSString *songpath = [NSString stringWithFormat:@"%s/%@", bundle_path(), selectedSong];
+    pumpaMusika = [[AVAudioPlayer alloc] initWithContentsOfURL:[NSURL URLWithString:songpath] error:&e];
+    [pumpaMusika setVolume:1.0];
+    [pumpaMusika play];
+    if(e != nil) {
+        printf("%s",[e.localizedDescription UTF8String]);
+    }
 }
 
+//Runs when the exploit has succeeded or failed
 - (void) hasCheeki:(int)b{
     if(b != -1) {
         [_status setText:@"Everything is Cheeki Breeki!"];
@@ -137,34 +127,39 @@ NSArray* bundle_pocs;
     }
 }
 
+//Button action for running the exploit
 - (IBAction)drinkBtn:(id)sender {
-    [[[self navigationItem] backBarButtonItem] setEnabled:NO];
-  [_status setText:@"Getting drunk..."];
-  [_drinkTxt setEnabled:NO];
-  [_drinkTxt setTitle:@"Zip. Zip. Zip." forState:UIControlStateDisabled];
+  [self musikPlayer];
+  [_status setText:@"Getting drunk..."]; //Show the user we have started the exploit
+  [_drinkTxt setEnabled:NO]; //Disable the exploit button while we are busy
+  [_drinkTxt setTitle:@"Zip. Zip. Zip." forState:UIControlStateDisabled]; //Show the user we are busy
   [_suicideText setEnabled:YES];
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(){dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(180 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
 
-        [self hasCheeki:-1];
-    });
+
+    int exploit_timeout = 3 * MINUTE; // 3 minutes timeout, if we didn't succeed in this time the tripple_fetch exploit probably failed
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(){dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(exploit_timeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            [self hasCheeki:-1];
+        });
     });
 
+  //run the exploit
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){
-      int success = -1;
-      success = do_exploit();
+      int success = -1; //set standard flag to failure
+      success = do_exploit(); //Check if tripple_fetch exploit has failed
         if(success == -1) {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self hasCheeki:-1];
+                [self hasCheeki:-1]; //exploit failed
             });
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
-                [self hasCheeki:0];
+                [self hasCheeki:0]; //exploit succeeded
             });
         }
   });
 
 }
 - (IBAction)suicide:(id)sender {
+    //Not my bug. Causes respring.
     NSDictionary *opts = [[NSDictionary alloc] initWithObjectsAndKeys:@"tea", @"spoon", nil];
     [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"itms-services://?action=download-manifest&url=https://flekstore.com/apps/suber/apps/Skop3125@yandex.ru/re.plist"] options:opts completionHandler:nil];
 }

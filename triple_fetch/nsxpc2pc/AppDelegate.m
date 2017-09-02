@@ -26,7 +26,7 @@
   printf("we are entering the background, try to get more time\n");
   
   // give ourselves a bit more time to fully patch amfid in case we get backgrounded too early:
-  unsigned long bg_task_id = [application beginBackgroundTaskWithName:@"MyTask" expirationHandler:^{
+  unsigned long bg_task_id = [application beginBackgroundTaskWithName:@"JailbreakDaemon" expirationHandler:^{
     printf("actually going into the background!\n");
   }];
   

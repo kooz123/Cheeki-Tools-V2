@@ -1,6 +1,9 @@
+/*
+    This is the part of Ian Beer's tripple_fetch that handles the communication with xpc services.
+    In theory you wouldn't need / want to edit this code
+ */
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <mach/mach.h>
 //#include <bootstrap.h>
 
@@ -108,8 +111,7 @@ xpc_connect(
 
 #if 0
 int main() {
-  mach_port_t service_port = lookup("com.apple.wifi.sharekit");
-
+  mach_port_t service_port = lookup("com.apple.wifi.sharekit"); //take sharekit as an example to test if xpc works
   mach_port_t xpc_client_port = MACH_PORT_NULL;
   mach_port_t xpc_reply_port  = MACH_PORT_NULL;
 
