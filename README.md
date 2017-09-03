@@ -24,7 +24,7 @@ A 10.2.1 jailbreak for 64-bit devices, for all squatters and communists
 
 # Will support
 - iPhone SE (10.2.1)
-- iPhone 6S / 6+ (10.2.1)
+- iPhone 6S / 6S+ (10.2.1)
 - iPhone 6 / 6+ (10.2.1)
 - iPhone 5S
 - iPad devices (10.2.1 arm64)
