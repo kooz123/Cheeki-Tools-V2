@@ -20,6 +20,7 @@ A 10.2.1 jailbreak for 64-bit devices, for all squatters and communists
 - Add code for setting a nonce on iOS 10.3.1
 - Add code for 10.3.1 for gaining tfp0 (convert_task_to_port)
 - Add a KPP-race for 10.3.1
+- Add your DECOMPRESSED kernelcache of iOS 10.3.1 in a pull request, you can use kdump for it, find it under downloads at:  http://coffeebreakers.space/
 
 # Will support
 - iPhone SE (10.2.1)
