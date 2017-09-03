@@ -1,27 +1,34 @@
 # CheekiJailbreeki
 A 10.2.1 jailbreak for 64-bit devices, for all squatters and communists
 
-*Please note: this is work in progress, currently there only are the exploits by Adam Donefeld for IOSurface and AVEncoder + Ian Beer's triple_fetch adopted into a xCode project with the right linker settings so it is easier to compile into an iPhone app for anyone. **Sandbox bypass doesn't work yet and the app will crash, once it does the kernel exploit shouldn't fail***
+*Please note: this is work in progress adopted into a xCode project with the right linker settings so it is easier to compile into an iPhone app for anyone but mainly meant for developers until it's finished. 
+
+# Summary
+- Sandbox bypass now works
 
 # Jailbreakers of all nations unite!
-Add the offsets for iPhone 6 on 10.3.1 to speed up the progress.
-(This project uses only the xcode settings of yalu for compilation convenience. No actual code of yalu was used.)
-
+Add the offsets for kernelpatches for iOS 10.3.1 to speed up the progress
+Add code for setting a nonce on iOS 10.3.1
+Add code for 10.3.1 for gaining tfp0 (convert_task_to_port)
+Add a KPP-race for 10.3.1
 
 # Will support
 - iPhone SE (10.2.1)
 - iPhone 6S / 6+ (10.2.1)
 - iPhone 6 / 6+ (10.2.1)
 - iPhone 5S
-
-
-# Future devices
 - iPad devices (10.2.1 arm64)
 - iPod devices (10.2.1 arm64)
 
-# Might not support
+# Does not support
+- iPhone 8 (iPhone 8 will come with iOS 11)
 - iPhone 7
 - iPhone 7+
+- 10.3.2+
+
+# Might support
+- 10.3.1
+- 10.3.2 (When CVE-2017-7009 will be uncovered (public) or found.
 
 # Will not support
 32-bit devices
