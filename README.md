@@ -5,12 +5,21 @@ A 10.2.1 jailbreak for 64-bit devices, for all squatters and communists
 
 # Summary
 - Sandbox bypass now works
+- Added comments for convenience and capitalist noobs.
+- Added music player
+- Added Luca Todesco to the credits
+- Fixed a vulnerability that Ian Beer left behind in the argv of the debugserver spawn code
+- Improved logging
+- Fixed an UI issue for the iPhone SE
+- Fixed a logic issue
+- Added NULL_PTR free checks to the post exploit code
+- Added overflow checks to run_poc
 
 # Jailbreakers of all nations unite!
-Add the offsets for kernelpatches for iOS 10.3.1 to speed up the progress
-Add code for setting a nonce on iOS 10.3.1
-Add code for 10.3.1 for gaining tfp0 (convert_task_to_port)
-Add a KPP-race for 10.3.1
+- Add the offsets for kernelpatches for iOS 10.3.1 to speed up the progress
+- Add code for setting a nonce on iOS 10.3.1
+- Add code for 10.3.1 for gaining tfp0 (convert_task_to_port)
+- Add a KPP-race for 10.3.1
 
 # Will support
 - iPhone SE (10.2.1)
