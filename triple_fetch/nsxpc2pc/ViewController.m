@@ -100,6 +100,7 @@ int random_number_between(int min, int max) {
     if(e != nil) {
         printf("%s",[e.localizedDescription UTF8String]);
     }
+    selectedSong = 0;
 }
 
 //Runs when the exploit has succeeded or failed
@@ -116,7 +117,9 @@ int random_number_between(int min, int max) {
 
 //Button action for running the exploit
 - (IBAction)drinkBtn:(id)sender {
-  [self musikPlayer];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self musikPlayer];
+    });
   [_status setText:@"Getting drunk..."]; //Show the user we have started the exploit
   [_drinkTxt setEnabled:NO]; //Disable the exploit button while we are busy
   [_drinkTxt setTitle:@"Zip. Zip. Zip." forState:UIControlStateDisabled]; //Show the user we are busy
