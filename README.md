@@ -40,9 +40,13 @@ Add the offsets for iPhone 6 on 10.3.1 to speed up the progress.
 - Download the project
 - Go into the tripple_fetch folder
 cd tripple_fetch_sdk
+
 ./build.sh
+
 cp ziva1 ../nsxpc2pc
+
 cp ziva1 ../nsxpc2pc/pocs/
+
 open ../nsxpc2pc.xcodeproj
 
 # To do
