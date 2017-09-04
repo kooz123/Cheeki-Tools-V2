@@ -48,4 +48,9 @@ open ../nsxpc2pc.xcodeproj
 # To do
 - Fix the yalu102 offsets
 - Make the output of ziVA log to the debugger
-- Make the world communistic 
+- Make the world communistic
+- For some reason my songs don't play random. Fix it and get credited. (:D)
+
+# Extra
+- If you have libimobiledevice installed you can run the debug-iphone to get a bit more debug output
+- If you have libimobiledevice installed you can run reboot-iphone to restart your iphone when the exploit fails
