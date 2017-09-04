@@ -39,6 +39,7 @@ Add the offsets for iPhone 6 on 10.3.1 to speed up the progress.
 # Compilation instructions
 - Download the project
 - Go into the tripple_fetch folder
+
 cd tripple_fetch_sdk
 
 ./build.sh
