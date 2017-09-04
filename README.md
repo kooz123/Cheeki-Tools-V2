@@ -56,17 +56,13 @@ A 10.2.1 jailbreak for 64-bit devices, for all squatters and communists
 
 # Compilation instructions
 - Download the project
-- Go into the tripple_fetch folder
+- Go into the triple_fetch folder
 
-cd tripple_fetch_sdk
-
-./build.sh
-
-cp ziva1 ../nsxpc2pc
-
-cp ziva1 ../nsxpc2pc/pocs/
-
-open ../nsxpc2pc.xcodeproj
+      cd triple_fetch_sdk
+      ./build.sh
+      cp ziva1 ../nsxpc2pc
+      cp ziva1 ../nsxpc2pc/pocs/
+      open ../nsxpc2pc.xcodeproj
 
 # To do
 - Fix the yalu102 offsets
