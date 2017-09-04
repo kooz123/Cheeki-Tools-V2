@@ -37,6 +37,7 @@ A 10.2.1 jailbreak for 64-bit devices, for all squatters and communists
 - 10.3.2+
 
 # Might support
+- 10.3
 - 10.3.1
 - 10.3.2 (When CVE-2017-7009 will be uncovered (public) or found.
 
