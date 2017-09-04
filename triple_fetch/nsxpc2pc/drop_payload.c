@@ -357,9 +357,11 @@ void start_debugserver(mach_port_t privileged_task_port, mach_port_t spawn_conte
     //Run the debugserver
     spawn_bundle_binary_with_priv_port(privileged_task_port, spawn_context_task_port, "debugserver", argv, envp);
     //Run the kernel exploit (ziVA)
+    //char* argv[] = {"cyka_blyat", NULL};
+    
     spawn_bundle_binary_with_priv_port(cached_privileged_port, cached_spawn_context_port, "ziva1", argv, envp);
   printf("The debugserver and the katusha (ziVA) are happy to be working for Mr. Trotsky now.\nThey were given the priviliged task port.\n");
-    ps(); //Print the running processes to the console.
+    //ps(); //Print the running processes to the console.
   // now the user can connect to the debugserver binary
 }
 

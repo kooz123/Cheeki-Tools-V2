@@ -11,15 +11,14 @@
 #include <string.h>
 #include <unistd.h>
 #define MINUTE 60
+
 /* Retrieve the path of this app's folder */
 static char* bundle_path() {
   CFBundleRef mainBundle = CFBundleGetMainBundle();
   CFURLRef resourcesURL = CFBundleCopyResourcesDirectoryURL(mainBundle);
   int len = 4096;
   char* path = malloc(len);
-  
   CFURLGetFileSystemRepresentation(resourcesURL, TRUE, (UInt8*)path, len);
-  
   return path;
 }
 
@@ -109,9 +108,9 @@ int random_number_between(int min, int max) {
         [_status setText:@"Everything is Cheeki Breeki!"];
         [_drinkTxt setTitle:@"DAVAY DAVAY!" forState:UIControlStateDisabled];
     }else {
+        [_drinkTxt setTitle:@"Oh no the Germans have rekt you." forState:UIControlStateNormal];
         [_status setText:@"Exploit failed"];
         [_drinkTxt setEnabled:YES];
-        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"panic://"] options:[NSDictionary alloc] completionHandler:nil];
     }
 }
 
@@ -127,10 +126,10 @@ int random_number_between(int min, int max) {
 
 
     int exploit_timeout = 3 * MINUTE; // 3 minutes timeout, if we didn't succeed in this time the tripple_fetch exploit probably failed
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(){dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(exploit_timeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+   /* dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(){dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(exploit_timeout * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [self hasCheeki:-1];
         });
-    });
+    }); */
 
   //run the exploit
   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^(void){

