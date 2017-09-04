@@ -353,11 +353,11 @@ void spawn_bundle_binary_with_priv_port(mach_port_t privileged_task_port,
 void start_debugserver(mach_port_t privileged_task_port, mach_port_t spawn_context_task_port) {
   char* envp[] = {NULL}; //environment pointer, we don't need environment vars so yeah it's null.
     /* WTF Ian Beer, the loopback device really? that was a vulnerability, glad I fixed it. */
-    char* argv[] = {"debugserver", "-l", "stdout", "-g", "127.0.0.1:1234", NULL}; //start the debugserver
+    //char* argv[] = {"debugserver", "-l", "stdout", "-g", "127.0.0.1:1234", NULL}; //start the debugserver
     //Run the debugserver
-    spawn_bundle_binary_with_priv_port(privileged_task_port, spawn_context_task_port, "debugserver", argv, envp);
+    //spawn_bundle_binary_with_priv_port(privileged_task_port, spawn_context_task_port, "debugserver", argv, envp);
     //Run the kernel exploit (ziVA)
-    //char* argv[] = {"cyka_blyat", NULL};
+    char* argv[] = {"cyka_blyat", NULL};
     
     spawn_bundle_binary_with_priv_port(cached_privileged_port, cached_spawn_context_port, "ziva1", argv, envp);
   printf("The debugserver and the katusha (ziVA) are happy to be working for Mr. Trotsky now.\nThey were given the priviliged task port.\n");
