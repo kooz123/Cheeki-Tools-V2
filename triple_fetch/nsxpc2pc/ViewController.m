@@ -68,6 +68,7 @@ AVAudioPlayer *pumpaMusika; //Music player
 @implementation ViewController
 - (void)viewDidLoad {
   [super viewDidLoad];
+  srand(time(NULL));
   vc = self;
   _suicideText.enabled = NO; //disable the respring button
   // get the list of poc binaries:
