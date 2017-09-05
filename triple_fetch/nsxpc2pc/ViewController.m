@@ -10,6 +10,8 @@
 #include <dirent.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
+
 #define MINUTE 60
 
 /* Retrieve the path of this app's folder */
@@ -68,6 +70,7 @@ AVAudioPlayer *pumpaMusika; //Music player
 @implementation ViewController
 - (void)viewDidLoad {
   [super viewDidLoad];
+  srand(time(NULL));
   vc = self;
   _suicideText.enabled = NO; //disable the respring button
   // get the list of poc binaries:
