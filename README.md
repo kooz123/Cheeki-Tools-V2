@@ -63,6 +63,16 @@ A 10.2.1 jailbreak for 64-bit devices, for all squatters and communists
       cp ziva1 ../nsxpc2pc
       cp ziva1 ../nsxpc2pc/pocs/
       open ../nsxpc2pc.xcodeproj
+      
+# Problem Solving
+- Plug in your iDevice (Make Sure it is NOT Locked!)
+- Goto Window->Devices
+- Wait for the symbols to load
+- Make Sure To CHANGE your Signing team AND the name of the app id to something unique.
+- Example (com.cyka.blyat -> com.cyka.blyat.rashb)
+- Make sure you have provisioning profiles
+- Compile for the device plugged in instead of simulator
+- PROFIT??!!
 
 # To do
 - Fix the yalu102 offsets
