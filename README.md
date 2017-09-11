@@ -48,7 +48,8 @@ A 10.2.1 jailbreak for 64-bit devices, for all squatters and communists
 - Security Researcher Adam Donenfeld [@doadam](http://twitter.com/doadam) for opensourcing his IOSurface and AVEncoder exploits.
 - Security Researcher Ian Beer from Google Project Zero for opensourcing his NSXPC exploit (triple_fetch).
 - Security Researcher Coolstar [@coolstarorg](http://twitter.com/coolstarorg) for his patch-unpatch idea.
-- Luca Todesco, for being a cool guy and previous jailbreaks.
+- Luca Todesco, for the Yalu102 Kernel Patches.
+- Lokihardt for his WebKit exploit that will lead to JailbreakMe 2017.
 - Karl Marx and Friedrich Engels, for creating the roots of communism.
 - Boris Slav, for his great tutorials and videos.
 - Vladimir Putin, for being a b0ss.
